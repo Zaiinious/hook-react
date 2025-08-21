@@ -27,6 +27,7 @@ export default function App() {
 
       <div>
         {page === "counter" && <Counter />}
+        {page === "fetch-users" && <FetchUsers />}
       </div>
     </div>
   );
