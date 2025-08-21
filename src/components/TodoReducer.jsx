@@ -1,34 +1,80 @@
 import { useReducer, useState } from "react";
 import "../App.css";
 
-function reducer(todos, action) {
+const initialState = [];
+
+function reducer(state, action) {
   switch (action.type) {
-    case "ADD":
-      return [...todos, { id: Date.now(), text: action.text, done: false }];
-    case "TOGGLE":
-      return todos.map(t => t.id === action.id ? { ...t, done: !t.done } : t);
-    case "DELETE":
-      return todos.filter(t => t.id !== action.id);
+    case "ADD_TODO":
+      return [...state, { id: Date.now(), text: action.payload, completed: false }];
+    case "TOGGLE_TODO":
+      return state.map(todo =>
+        todo.id === action.payload ? { ...todo, completed: !todo.completed } : todo
+      );
+    case "REMOVE_TODO":
+      return state.filter(todo => todo.id !== action.payload);
     default:
-      return todos;
+      return state;
   }
 }
 
 export default function TodoReducer() {
-  const [todos, dispatch] = useReducer(reducer, []);
-  const [text, setText] = useState("");
+  const [todos, dispatch] = useReducer(reducer, initialState);
+  const [input, setInput] = useState("");
+
+  const handleAdd = () => {
+    if (!input.trim()) return;
+    dispatch({ type: "ADD_TODO", payload: input.trim() });
+    setInput("");
+  };
 
   return (
     <div className="card">
       <h2>Todo List (useReducer)</h2>
-      <input value={text} onChange={e => setText(e.target.value)} placeholder="Tambah todo"/>
-      <button className="btn green" onClick={() => { dispatch({ type: "ADD", text }); setText(""); }}>Tambah</button>
-      <ul>
+
+      <div style={{ marginBottom: "1rem", display: "flex", gap: "0.5rem" }}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Tulis todo..."
+          className="input-field"
+          style={{ flex: 1 }}
+        />
+        <button onClick={handleAdd} className="btn blue">Tambah</button>
+      </div>
+
+      <ul style={{ listStyle: "none", paddingLeft: 0 }}>
         {todos.map(todo => (
-          <li key={todo.id} style={{ textDecoration: todo.done ? "line-through" : "" }}>
-            {todo.text}
-            <button className="btn blue" onClick={() => dispatch({ type: "TOGGLE", id: todo.id })}>✔</button>
-            <button className="btn red" onClick={() => dispatch({ type: "DELETE", id: todo.id })}>✖</button>
+          <li key={todo.id} style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            background: todo.completed ? "#d4edda" : "#f0f0f0",
+            borderRadius: "8px",
+            padding: "0.5rem 0.75rem",
+            marginBottom: "0.5rem",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            transition: "all 0.3s"
+          }}>
+            <span
+              onClick={() => dispatch({ type: "TOGGLE_TODO", payload: todo.id })}
+              style={{
+                textDecoration: todo.completed ? "line-through" : "none",
+                cursor: "pointer",
+                fontWeight: todo.completed ? "500" : "400",
+                color: todo.completed ? "#155724" : "#333"
+              }}
+            >
+              {todo.text}
+            </span>
+            <button
+              onClick={() => dispatch({ type: "REMOVE_TODO", payload: todo.id })}
+              className="btn red"
+              style={{ padding: "0.2rem 0.5rem", fontSize: "0.8rem" }}
+            >
+              Hapus
+            </button>
           </li>
         ))}
       </ul>

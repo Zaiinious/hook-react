@@ -1,21 +1,41 @@
-import { useCallback, useState } from "react";
+import { useState, useCallback } from "react";
 import "../App.css";
 
-export default function ItemList() {
+export default function ItemListCallback() {
   const [items, setItems] = useState([]);
-  const [count, setCount] = useState(0);
+  const [input, setInput] = useState("");
 
-  const addItem = useCallback(() => {
-    setItems(prev => [...prev, `Item ${prev.length + 1}`]);
-  }, []);
+  // handler untuk tambah item, tidak dibuat ulang setiap render
+  const handleAdd = useCallback(() => {
+    if (!input) return;
+    setItems(prev => [...prev, input]);
+    setInput("");
+  }, [input]);
 
   return (
     <div className="card">
-      <h2>Daftar Item (useCallback)</h2>
-      <button className="btn blue" onClick={addItem}>Tambah Item</button>
-      <button className="btn green" onClick={() => setCount(count + 1)}>Tambah Counter</button>
-      <p>Counter: {count}</p>
-      <ul>{items.map((i, idx) => <li key={idx}>{i}</li>)}</ul>
+      <h2>useCallback - Daftar Item</h2>
+
+      <div style={{ marginBottom: "1rem" }}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Tulis item..."
+          className="input-field"
+        />
+        <button onClick={handleAdd} className="btn blue">
+          Tambah Item
+        </button>
+      </div>
+
+      <ul style={{ textAlign: "left", paddingLeft: "1.2rem" }}>
+        {items.map((item, index) => (
+          <li key={index} style={{ marginBottom: "0.3rem" }}>
+            {index + 1}. {item}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

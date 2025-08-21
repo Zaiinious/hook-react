@@ -1,4 +1,3 @@
-// hooks/useLocalStorage.js
 import { useState, useEffect, useDebugValue } from "react";
 
 export default function useLocalStorage(key, initialValue) {
@@ -11,7 +10,7 @@ export default function useLocalStorage(key, initialValue) {
     localStorage.setItem(key, JSON.stringify(value));
   }, [key, value]);
 
-  useDebugValue(`LocalStorage key: ${key}`);
+  useDebugValue(value ? "Data tersedia" : "Kosong");
 
   return [value, setValue];
 }
