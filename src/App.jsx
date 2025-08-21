@@ -1,34 +1,28 @@
-import { useState } from "react";
 import Counter from "./components/Counter";
+import UserList from "./components/UserList";
+import FormFocus from "./components/FormFocus";
+import Factorial from "./components/Factorial";
+import ItemList from "./components/ItemList";
+import TodoReducer from "./components/TodoReducer";
+import ThemeSwitcher from "./components/ThemeSwitcher";
+import ScrollPosition from "./components/ScrollPosition";
+import CustomInput from "./components/CustomInput";
+import DebugValueExample from "./components/DebugValueExample";
 import "./App.css";
 
 export default function App() {
-  const [page, setPage] = useState("counter");
-
-  const menus = [
-    { id: "counter", label: "Counter" },
-  ];
-
   return (
     <div className="container">
-      <h1>React Hooks Playground 🚀</h1>
-
-      <div className="menu">
-        {menus.map(menu => (
-          <button 
-            key={menu.id}
-            onClick={() => setPage(menu.id)} 
-            className={page === menu.id ? "active" : ""}
-          >
-            {menu.label}
-          </button>
-        ))}
-      </div>
-
-      <div>
-        {page === "counter" && <Counter />}
-        {page === "fetch-users" && <FetchUsers />}
-      </div>
+      <Counter />
+      <UserList />
+      <FormFocus />
+      <Factorial />
+      <ItemList />
+      <TodoReducer />
+      <ThemeSwitcher />
+      <ScrollPosition />
+      <CustomInput />
+      <DebugValueExample />
     </div>
   );
 }
